@@ -10,6 +10,13 @@ function PlanetsProvider({ children }) {
   const [comparison, setComparison] = useState('maior que');
   const [value, setValue] = useState(0);
   const [filterByNumericValue, setFilterByNumericValue] = useState([]);
+  const [filterOptions, setFiltersOptions] = useState({
+    population: 'population',
+    orbital_period: 'orbital_period',
+    diameter: 'diameter',
+    rotation_period: 'rotation_period',
+    surface_water: 'surface_water',
+  });
 
   useEffect(() => {
     const fetchPlanets = async () => {
@@ -50,6 +57,12 @@ function PlanetsProvider({ children }) {
     setNameFilter(target.value.toLowerCase());
   };
 
+  const removeOption = () => {
+    const optionDelete = filterOptions;
+    delete optionDelete[column];
+    setFiltersOptions(optionDelete);
+  };
+
   const handleButton = () => {
     const filterByNumericValues = {
       column,
@@ -57,6 +70,13 @@ function PlanetsProvider({ children }) {
       value,
     };
     setFilterByNumericValue([...filterByNumericValue, filterByNumericValues]);
+    removeOption();
+  };
+
+  const handleClickDelete = (index) => {
+    setFilterByNumericValue(
+      filterByNumericValue.filter((_item, itemIndex) => itemIndex !== index),
+    );
   };
 
   return (
@@ -71,7 +91,9 @@ function PlanetsProvider({ children }) {
         setColumn,
         setComparison,
         setValue,
-        filterByNumericValue } }
+        filterByNumericValue,
+        handleClickDelete,
+        filterOptions } }
     >
       { children }
     </PlanetsContext.Provider>

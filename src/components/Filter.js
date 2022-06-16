@@ -11,6 +11,8 @@ export default function Filter() {
     setComparison,
     setValue,
     filterByNumericValue,
+    handleClickDelete,
+    filterOptions,
   } = useContext(PlanetsContext);
 
   return (
@@ -28,11 +30,11 @@ export default function Filter() {
           onChange={ ({ target }) => setColumn(target.value) }
           value={ column }
         >
-          <option>population</option>
-          <option>orbital_period</option>
-          <option>diameter</option>
-          <option>rotation_period</option>
-          <option>surface_water</option>
+          {
+            Object.keys(filterOptions).map((option, index) => (
+              <option key={ index } value={ option }>{ option }</option>
+            ))
+          }
         </select>
         Operador
         <select
@@ -58,8 +60,11 @@ export default function Filter() {
           Filtrar
         </button>
       </form>
-      {filterByNumericValue.map((filter) => (
-        <p key={ filter.column }>
+      {filterByNumericValue.map((filter, index) => (
+        <p
+          key={ `${filter.column}-${index}` }
+          data-testid="filter"
+        >
           {filter.column}
           {' '}
 
@@ -67,6 +72,14 @@ export default function Filter() {
           {' '}
 
           {filter.value}
+          {' '}
+
+          <button
+            type="button"
+            onClick={ () => handleClickDelete(index) }
+          >
+            Remover
+          </button>
         </p>
       ))}
     </div>
